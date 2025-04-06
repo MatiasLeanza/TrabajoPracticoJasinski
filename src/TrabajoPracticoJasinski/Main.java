@@ -4,7 +4,10 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) { 
         Scanner s = new Scanner(System.in);
-        String[][] mainArray = new String[100][8]; //el string principal, hasta 100 videos, y son 8 cosas para mostrar en pantalla
+        final int cantMinVideos = 0;
+        final int cantMaxVideos = 100;
+        final int datosMostrados = 8;
+        String[][] mainArray = new String[cantMaxVideos][datosMostrados]; //el string principal, hasta 100 videos, y son 8 cosas para mostrar en pantalla
         int opcion;
         
         opcion = mostrarMenu(s);
