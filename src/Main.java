@@ -107,6 +107,12 @@ public class Main {
             case 11:
                 System.out.println("Programa cerrado con exito");
                 break;
+	//Juan Ignacio Ferrando: Gente, les diria que pongan esto por si ponen un valor que no esta en el switch,
+	//ademas pongan una variable de control, por ejemplo "error" que sea booleano y que todo el switch este adentro de un do-while(error)
+	//poniendo en el case default un error = true;
+	    case default:
+		System.out.println("ERROR: Ingrese una opcion valida");
+		break;
         }
     }
 }
