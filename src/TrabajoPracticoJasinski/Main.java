@@ -29,7 +29,7 @@ public class Main {
         final int MAX_OPCION = 11;
         final int MIN_OPCION = 1;
 
-        System.out.println("----------------------------------------------MENU-----------------------------------------");
+        System.out.println("---------------------MENU---------------------");
         System.out.println("Elija una Opcion");
         System.out.println("1) Subir video");
         System.out.println("2) Consultar video");
@@ -42,6 +42,7 @@ public class Main {
         System.out.println("9) Buscar videos mejor/peor valorados");
         System.out.println("10) Calcular estadisticas de la plataforma");
         System.out.println("11) Salir");
+        System.out.println("-----------------------------------------------");
 
         return comprobarEntero(s,MAX_OPCION,MIN_OPCION);
     }
@@ -117,9 +118,13 @@ public class Main {
 
 
 
-    private static void ingresarVideo(Scanner s,final String[][] mainArray) {
-        String titulo, canal, pattern = "dd/MM/yyyy";
-        int id, categoria, duracion, visualizaciones, valoracion;
+    private static void ingresarVideo(Scanner s,final String[][] ARRAY) {
+    	String titulo,
+    	canal,
+    	pattern = "dd/MM/yyyy";
+    	
+        int id, categoria, duracion, visualizaciones, valoracion, indice_id;
+        
         SimpleDateFormat formato = new SimpleDateFormat(pattern);
         formato.setLenient(false);
 
@@ -139,13 +144,14 @@ public class Main {
         System.out.println("Ingrese el ID del video");
         do {
             id = comprobarEntero(s, CANT_VIDEOS_MAX, CANT_VIDEOS_MIN);
-            if(checkEntero(mainArray, 0 ,id)){
-                error = true;
-            } else {
+            indice_id = buscarEntero(ARRAY, 0, id);
+            if(indice_id != -1){
                 System.out.println("Este ID ya se encuentra en uso\nIntentelo de nuevo");
+                error = true;
             }
             
-        } while (!error);
+        } while (error);
+        
         error = false;
 
         System.out.println("Porfavor ingrese el nombre del video que desea ingresar: ");
@@ -165,12 +171,13 @@ public class Main {
 
         System.out.println("Ingrese la fecha de publicacion (con el formato DD/MM/YYYY)");
         Date fecha = null;
+        
         do {
             try {
                 fecha = formato.parse(s.nextLine());
                 error = true;
             } catch (Exception e) {
-                System.out.println("Fecha ingresada no válida. Asegúrese de usar el formato DD/MM/YYYY.");
+                System.out.println("Fecha ingresada no valida. Asegúrese de usar el formato DD/MM/YYYY.");
             }
         } while (!error);
 
@@ -182,29 +189,29 @@ public class Main {
         System.out.println("Ingrese la valoraxion promedio del video:");
         valoracion = comprobarEntero(s, 5, 1);
 
-        mainArray[videos][0] = String.valueOf(id);
-        mainArray[videos][1] = titulo;
-        mainArray[videos][2] = canal;
-        mainArray[videos][3] = String.valueOf(categoria);
-        mainArray[videos][4] = String.valueOf(duracion);
-        mainArray[videos][5] = String.valueOf(fecha);
-        mainArray[videos][6] = String.valueOf(visualizaciones);
-        mainArray[videos][7] = String.valueOf(valoracion);
+        ARRAY[videos][0] = String.valueOf(id);
+        ARRAY[videos][1] = titulo;
+        ARRAY[videos][2] = canal;
+        ARRAY[videos][3] = String.valueOf(categoria);
+        ARRAY[videos][4] = String.valueOf(duracion);
+        ARRAY[videos][5] = String.valueOf(fecha);
+        ARRAY[videos][6] = String.valueOf(visualizaciones);
+        ARRAY[videos][7] = String.valueOf(valoracion);
 
         videos++;
     }
 
 
-    private static boolean checkEntero(final String[][] ARRAY, final int POSICION,final int NUM) {
+    private static int buscarEntero(final String[][] ARRAY, final int POSICION,final int NUM) {
         int i = 0;
         while (i < videos) {
-            if(ARRAY[i][POSICION].equals(String.valueOf(NUM))) {
-                return false;
+            if(Integer.parseInt(ARRAY[i][POSICION]) == NUM) {
+                return i;
             }
             i++;
         }
 
-        return true;
+        return -1;
     }
 
 
