@@ -6,25 +6,22 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static final int CANT_VIDEOS_MIN = 0;
-    private static final int CANT_VIDEOS_MAX = 100;
-    private static final int TAMANO = 8;
-    private static int videos = 0;
+    public static void main(String[] args) {
+        final int CANT_VIDEOS_MIN = 0;
+        final int CANT_VIDEOS_MAX = 100;
+        final int TAMANO = 8;
+        int videos = 0;
 
-    public static void main(String[] args) { 
         Scanner s = new Scanner(System.in);
-        
         String[][] mainArray = new String[CANT_VIDEOS_MAX][TAMANO];
         int opcion;
-        
+
         do {
             opcion = mostrarMenu(s);
-            generarAccion(s,opcion, mainArray);
-        }while(opcion != 11);
+            videos = generarAccion(s, opcion, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos);
+        } while(opcion != 11);
     }
-    
-  
-    
+
     public static int mostrarMenu(Scanner s) {
         final int MAX_OPCION = 11;
         final int MIN_OPCION = 1;
@@ -44,117 +41,70 @@ public class Main {
         System.out.println("11) Salir");
         System.out.println("-----------------------------------------------");
 
-        return comprobarEntero(s,MAX_OPCION,MIN_OPCION);
+        return ingresarEntero(s, MAX_OPCION, MIN_OPCION);
     }
-    
-   
-    
-    //Funcion para verificar la opcion que elija el usuario en el menu
-    public static int comprobarEntero(Scanner s, final int MAX, final int MIN) {
-    	boolean error = false;
-		int numero = 0;
-    	do {
-    		try {
-        		numero = s.nextInt();
-    			if( numero > MAX || numero < MIN) {
-    				error = true;
-    				System.out.println("El numero debe estar entre el " + MIN + " y " + MAX);
-    				System.out.println("Ingrese el numero nuevamente");
-    			} else {
-                    error = false;
+
+    public static int ingresarEntero(Scanner s, final int MAX, final int MIN) {
+        boolean error;
+        int numero = 0;
+        do {
+            error = false;
+            try {
+                numero = s.nextInt();
+                if (numero > MAX || numero < MIN) {
+                    error = true;
+                    System.out.println("El numero debe estar entre el " + MIN + " y " + MAX);
                 }
-    		} catch(InputMismatchException e) {
-    			error = true;
-    			System.out.println("El tipo de dato ingresado es incorrecto");
-    			}catch(Exception e) {
-    				System.out.println("Error desconocido");
-    				System.out.println("Vuelva a intentar");
-    			}finally {
-    				s.nextLine();
-    			}
-    	} while(error);
-        
+            } catch (InputMismatchException e) {
+                error = true;
+                System.out.println("El tipo de dato ingresado es incorrecto");
+            } catch (Exception e) {
+                System.out.println("Error desconocido");
+                error = true;
+            } finally {
+                s.nextLine();
+            }
+        } while (error);
         return numero;
     }
-    
-   
-    public static void generarAccion(Scanner s,final int opcion, final String[][] mainArray) {
+
+    public static int generarAccion(Scanner s, final int opcion, final String[][] mainArray,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX,final int TAMANO, int videos) {
         switch (opcion) {
             case 1:
-                ingresarVideo(s,mainArray);
+                videos = ingresarVideo(s, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos);
                 break;
             case 2:
-            	consultarDatos(s, mainArray);
-                break;
-            case 3:
-
-                break;
-            case 4:
-
-                break;
-            case 5:
-
-                break;
-            case 6:
-
-                break;
-            case 7:
-
-                break;
-            case 8:
-
-                break;
-            case 9:
-
-                break;
-            case 10:
-
-                break;
-            case 11:
-            	
+                consultarDatos(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
                 break;
         }
+        return videos;
     }
 
-
-
-    private static void ingresarVideo(Scanner s,final String[][] ARRAY) {
-    	String titulo,
-    	canal,
-    	pattern = "dd/MM/yyyy";
-    	
+    private static int ingresarVideo(Scanner s, final String[][] ARRAY,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX,final int TAMANO, int videos) {
+        String titulo, canal, pattern = "dd/MM/yyyy";
         int id, categoria, duracion, visualizaciones, valoracion, indice_id;
-        
         SimpleDateFormat formato = new SimpleDateFormat(pattern);
         formato.setLenient(false);
 
-        String [] categorias = {
-            "Gaming",
-            "Musica",
-            "Educacion",
-            "Comedia",
-            "Deportes",
-            "Tecnologia",
-            "Vlogs", 
-            "Otros"
+        String[] categorias = {
+            "Gaming", "Musica", "Educacion", "Comedia",
+            "Deportes", "Tecnologia", "Vlogs", "Otros"
         };
 
         boolean error = false;
-
         System.out.println("Ingrese el ID del video");
         do {
-            id = comprobarEntero(s, CANT_VIDEOS_MAX, CANT_VIDEOS_MIN);
-            indice_id = buscarEntero(ARRAY, 0, id);
-            if(indice_id != -1){
+            id = ingresarEntero(s, CANT_VIDEOS_MAX, CANT_VIDEOS_MIN);
+            indice_id = buscarEntero(ARRAY, 0, id, videos);
+            if (indice_id != -1) {
                 System.out.println("Este ID ya se encuentra en uso\nIntentelo de nuevo");
                 error = true;
+            } else {
+                error = false;
             }
-            
         } while (error);
-        
-        error = false;
 
-        System.out.println("Porfavor ingrese el nombre del video que desea ingresar: ");
+        System.out.println("Por favor ingrese el nombre del video: ");
         titulo = s.nextLine();
 
         System.out.println("Ingrese el nombre del canal: ");
@@ -164,30 +114,19 @@ public class Main {
         for (int i = 0; i < categorias.length; i++) {
             System.out.println((i+1) + "- " + categorias[i]);
         }
-        categoria = comprobarEntero(s, 8, 1);
+        categoria = ingresarEntero(s, 8, 1);
 
-        System.out.println("Ingrese la duracion del viedo en segundos");
-        duracion = comprobarEntero(s, Integer.MAX_VALUE, 60);
+        System.out.println("Ingrese la duracion del video en segundos");
+        duracion = ingresarEntero(s, Integer.MAX_VALUE, 60);
 
-        System.out.println("Ingrese la fecha de publicacion (con el formato DD/MM/YYYY)");
-        Date fecha = null;
-        
-        do {
-            try {
-                fecha = formato.parse(s.nextLine());
-                error = true;
-            } catch (Exception e) {
-                System.out.println("Fecha ingresada no valida. Asegurese de usar el formato DD/MM/YYYY.");
-            }
-        } while (!error);
-
-        error = false;
+        System.out.println("Ingrese la fecha de publicacion (DD/MM/YYYY)");
+        Date fecha = validarFecha(s, formato);
 
         System.out.println("Ingrese la cantidad de visualizaciones: ");
-        visualizaciones = comprobarEntero(s, Integer.MAX_VALUE, 0);
+        visualizaciones = ingresarEntero(s, Integer.MAX_VALUE, 0);
 
-        System.out.println("Ingrese la valoraxion promedio del video:");
-        valoracion = comprobarEntero(s, 5, 1);
+        System.out.println("Ingrese la valoracion promedio del video:");
+        valoracion = ingresarEntero(s, 5, 1);
 
         ARRAY[videos][0] = String.valueOf(id);
         ARRAY[videos][1] = titulo;
@@ -198,63 +137,54 @@ public class Main {
         ARRAY[videos][6] = String.valueOf(visualizaciones);
         ARRAY[videos][7] = String.valueOf(valoracion);
 
-        videos++;
+        return videos + 1;
     }
 
+    private static Date validarFecha(Scanner s, SimpleDateFormat formato) {
+        Date fecha = null;
+        boolean error = false;
+        do {
+            try {
+                fecha = formato.parse(s.nextLine());
+                error = false;
+            } catch (Exception e) {
+                System.out.println("Fecha ingresada no valida. Use el formato DD/MM/YYYY.");
+                error = true;
+            }
+        } while (error);
+        return fecha;
+    }
 
-    private static int buscarEntero(final String[][] ARRAY, final int POSICION,final int NUM) {
-        int i = 0;
-        while (i < videos) {
-            if(Integer.parseInt(ARRAY[i][POSICION]) == NUM) {
+    private static int buscarEntero(final String[][] ARRAY, final int POSICION, final int NUM, final int videos) {
+        for (int i = 0; i < videos; i++) {
+            if (Integer.parseInt(ARRAY[i][POSICION]) == NUM) {
                 return i;
             }
-            i++;
         }
-
         return -1;
     }
 
-    
-    
-    private static void consultarDatos(Scanner s, final String[][]ARRAY) {
-    	System.out.println("Ingrese id del video que quiere consultar");
-    	boolean error = false;
-    	int id = -1;
-    do {
-    		error = true;
-    		id = comprobarEntero(s, CANT_VIDEOS_MAX,CANT_VIDEOS_MIN);
-    		if (id != -1) {
-    			System.out.println("Ingrese un id existente por favor");
-    			
-    		} else {
-    			error = false;
-    		}
-    }while (error);
-    	
-    
-    
-    
-  }
-    
-    
+    private static void consultarDatos(Scanner s, final String[][] ARRAY,final int TAMANO, final int videos,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
+        boolean error = false;
+        int indiceId = buscarVideoPorID(s, ARRAY, error, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+        for (int i = 0; i < TAMANO; i++) {
+            System.out.println(ARRAY[indiceId][i]);
+        }
+    }
 
-
-    /*private static String validarCanal(Scanner s, final String[][] ARRAY, final int POSICION) {
-        boolean check = false;
-        String str;
-        
+    private static int buscarVideoPorID(Scanner s, final String[][] ARRAY, boolean error,int videos, final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
+        int id, indiceId;
         do {
-            str = s.nextLine();
-            for (int i = 0; i < videos; i++) {
-                if (ARRAY[i][POSICION].equals(str)) {
-                    System.err.println("Este canal ya existe");
-                    System.out.println("Ingrese un nombre no existente");
-                } else {
-                    check = true;
-                }
+            System.out.println("Ingrese id del video que quiere consultar");
+            id = ingresarEntero(s, CANT_VIDEOS_MAX, CANT_VIDEOS_MIN);
+            indiceId = buscarEntero(ARRAY, 0, id, videos);
+            if (indiceId == -1) {
+                System.out.println("Ingrese un id existente por favor");
+                error = true;
+            } else {
+                error = false;
             }
-        } while (!check);
-
-        return str;
-    } */
+        } while (error);
+        return indiceId;
+    }
 }
