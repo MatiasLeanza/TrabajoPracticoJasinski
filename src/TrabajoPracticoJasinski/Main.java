@@ -19,7 +19,7 @@ public class Main {
         
         do {
             opcion = mostrarMenu(s);
-            opcionesProgramas(s,opcion, mainArray);
+            generarAccion(s,opcion, mainArray);
         }while(opcion != 11);
     }
     
@@ -78,13 +78,13 @@ public class Main {
     }
     
    
-    public static void opcionesProgramas(Scanner s,final int opcion, final String[][] mainArray) {
+    public static void generarAccion(Scanner s,final int opcion, final String[][] mainArray) {
         switch (opcion) {
             case 1:
                 ingresarVideo(s,mainArray);
                 break;
             case 2:
-
+            	consultarDatos(s, mainArray);
                 break;
             case 3:
 
@@ -111,7 +111,7 @@ public class Main {
 
                 break;
             case 11:
-
+            	
                 break;
         }
     }
@@ -177,7 +177,7 @@ public class Main {
                 fecha = formato.parse(s.nextLine());
                 error = true;
             } catch (Exception e) {
-                System.out.println("Fecha ingresada no valida. Asegúrese de usar el formato DD/MM/YYYY.");
+                System.out.println("Fecha ingresada no valida. Asegurese de usar el formato DD/MM/YYYY.");
             }
         } while (!error);
 
@@ -214,6 +214,29 @@ public class Main {
         return -1;
     }
 
+    
+    
+    private static void consultarDatos(Scanner s, final String[][]ARRAY) {
+    	System.out.println("Ingrese id del video que quiere consultar");
+    	boolean error = false;
+    	int id = -1;
+    do {
+    		error = true;
+    		id = comprobarEntero(s, CANT_VIDEOS_MAX,CANT_VIDEOS_MIN);
+    		if (id != -1) {
+    			System.out.println("Ingrese un id existente por favor");
+    			
+    		} else {
+    			error = false;
+    		}
+    }while (error);
+    	
+    
+    
+    
+  }
+    
+    
 
 
     /*private static String validarCanal(Scanner s, final String[][] ARRAY, final int POSICION) {
