@@ -45,7 +45,7 @@ public class Main {
     }
 
     public static int ingresarEntero(Scanner s, final int MAX, final int MIN) {
-        boolean error;
+        boolean error; 
         int numero = 0;
         do {
             error = false;
@@ -73,9 +73,18 @@ public class Main {
             case 1:
                 videos = ingresarVideo(s, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos);
                 break;
-            case 2:
+            case 2:	
+            	if(mainArray[0][0] == null) {
+            		System.err.println("Error. No se subio ningun video.");
+            		return -1;
+            	} else {
                 consultarDatos(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+                }
                 break;
+                
+            case 3:
+            	modificarInformacion(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+                
         }
         return videos;
     }
@@ -166,16 +175,23 @@ public class Main {
 
     private static void consultarDatos(Scanner s, final String[][] ARRAY,final int TAMANO, final int videos,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
         boolean error = false;
+        
+        
+        System.out.println("Ingrese id del video que quiere consultar");
+        
         int indiceId = buscarVideoPorID(s, ARRAY, error, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
         for (int i = 0; i < TAMANO; i++) {
             System.out.println(ARRAY[indiceId][i]);
-        }
+        } 
     }
 
     private static int buscarVideoPorID(Scanner s, final String[][] ARRAY, boolean error,int videos, final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
-        int id, indiceId;
+        
+    	
+    	
+    	int id, indiceId;
         do {
-            System.out.println("Ingrese id del video que quiere consultar");
+            
             id = ingresarEntero(s, CANT_VIDEOS_MAX, CANT_VIDEOS_MIN);
             indiceId = buscarEntero(ARRAY, 0, id, videos);
             if (indiceId == -1) {
@@ -187,4 +203,30 @@ public class Main {
         } while (error);
         return indiceId;
     }
+
+    private static int modificarInformacion (Scanner s, final String[][] ARRAY,final int TAMANO, final int videos,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
+    	 boolean error = false;
+    	 System.out.println("Ingrese id del video que quiere editar");
+    	 
+    	 int indiceId = buscarVideoPorID(s, ARRAY, error, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+    	 
+    	 System.out.println("Ahora ingrese el dato que quiera editar: ");
+    	
+         System.out.println("1) Titulo");
+         System.out.println("2) Canal");
+         System.out.println("3) Categoria");
+         System.out.println("4) Duracion");
+         System.out.println("5) Fecha");
+         System.out.println("6) Visualizaciones");
+         System.out.println("7) Valoracion");
+         System.out.println("8) Cancelar");
+         
+         int eleccion = s.nextInt();
+         
+         if (eleccion == 8) {
+        	 return -1;
+         } 
+        return -1;
+	}
 }
+	
