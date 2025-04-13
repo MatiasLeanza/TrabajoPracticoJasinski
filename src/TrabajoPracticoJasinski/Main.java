@@ -87,7 +87,7 @@ public class Main {
             	break;
             case 4:
             	if (videos >= 1) {
-            		eliminarVideo(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+            		videos = eliminarVideo(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
             	} else {
             		System.out.println("No hay ningun video subido, porfavor ingrese uno antes de borrar");
             	}
@@ -298,6 +298,8 @@ public class Main {
                     }
                     int nuevaCategoria = ingresarEntero(s, 8, 1);
                     string = String.valueOf(nuevaCategoria);
+                    break;
+                    
                 case 4: // Duración
                     System.out.println("Ingrese la nueva duración en segundos (mínimo 60)");
                     int nuevaDuracion = ingresarEntero(s, Integer.MAX_VALUE, 60);
