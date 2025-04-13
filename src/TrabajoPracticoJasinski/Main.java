@@ -12,13 +12,18 @@ public class Main {
         final int TAMANO = 8;
         int videos = 0;
 
+        String[] categorias = {
+            "Gaming", "Musica", "Educacion", "Comedia",
+            "Deportes", "Tecnologia", "Vlogs", "Otros"
+        };
+
         Scanner s = new Scanner(System.in);
         String[][] mainArray = new String[CANT_VIDEOS_MAX][TAMANO];
         int opcion;
 
         do {
             opcion = mostrarMenu(s);
-            videos = generarAccion(s, opcion, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos);
+            videos = generarAccion(s, opcion, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos,categorias);
         } while(opcion != 11);
     }
 
@@ -86,10 +91,12 @@ public class Main {
         return numero;
     }
 
-    public static int generarAccion(Scanner s, final int opcion, final String[][] mainArray,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX,final int TAMANO, int videos) {
+    public static int generarAccion(Scanner s, final int opcion, final String[][] mainArray,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX,final int TAMANO, int videos,
+    		final String[] categorias) {
+    	
         switch (opcion) {
             case 1:
-                videos = ingresarVideo(s, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos);
+                videos = ingresarVideo(s, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos,categorias);
                 break;
             case 2:	
             	if(mainArray[0][0] == null) {
@@ -112,6 +119,9 @@ public class Main {
             	break;
             case 5:
             	listarVideos(mainArray, videos);
+            	break;
+            case 6:
+            	buscarVideosPorCategoria(s,mainArray,videos,TAMANO,categorias);
             	break;
 	    case 7:
 		buscarVideosPorCanal(s,mainArray,videos,TAMANO);
@@ -156,16 +166,12 @@ public class Main {
 		return videos;
 	}
 
-	private static int ingresarVideo(Scanner s, final String[][] ARRAY,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX,final int TAMANO, int videos) {
+	private static int ingresarVideo(Scanner s, final String[][] ARRAY,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX,final int TAMANO, int videos,final String[] categorias) {
         String titulo, canal, pattern = "dd/MM/yyyy";
         int id, categoria, duracion, visualizaciones, valoracion, indice_id;
         SimpleDateFormat formato = new SimpleDateFormat(pattern);
         formato.setLenient(false);
 
-        String[] categorias = {
-            "Gaming", "Musica", "Educacion", "Comedia",
-            "Deportes", "Tecnologia", "Vlogs", "Otros"
-        };
 
         boolean error = false;
         System.out.println("Ingrese el ID del video");
@@ -249,6 +255,29 @@ public class Main {
         int indiceId = buscarVideoPorID(s, ARRAY, error, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
         mostrarVideo(ARRAY, TAMANO, indiceId); 
     }
+    
+    
+    private static void buscarVideosPorCategoria(Scanner s, final String[][] MATRIZ,final int videos,final int TAMAÑO,final String[] categorias) {
+        for (int i = 0; i < categorias.length; i++) {
+            System.out.println((i+1) + "- " + categorias[i]);
+        }
+    	System.out.println("Ingrese la categoria que desea buscar");
+    	int categoriaIngresada = ingresarEntero(s,8,1);
+    	System.out.println("Categoria elegida:"+ categorias[categoriaIngresada - 1]);
+    	boolean verificar = true;
+    	for(int i = 0; i  < videos ;i++) {
+    		if(Integer.parseInt(MATRIZ[i][3]) == categoriaIngresada) {
+				System.out.println("VIDEO NUMERO " + (i+1) + ":");
+				mostrarVideo(MATRIZ, TAMAÑO ,i);
+				verificar = false;
+    		}
+    	}
+        if(verificar) {
+        	System.out.println("Escribiste el nombre de un canal que no existe");
+        }	
+    }
+    
+    
 	
     private static void buscarVideosPorCanal(Scanner s,final String[][] MATRIZ, final int videos, final int TAMAÑO) {
     	System.out.println("Escribi el nombre del canal asi buscamos todos sus videos");
