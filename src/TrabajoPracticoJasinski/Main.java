@@ -44,6 +44,24 @@ public class Main {
         return ingresarEntero(s, MAX_OPCION, MIN_OPCION);
     }
 
+
+    public static String ingresarString(Scanner s, final int MAX, final int MIN) {
+    	boolean error;
+    	String texto;
+    	do {
+    		error = false;
+    		texto = s.nextLine().trim();
+    		if(texto.isEmpty()) {
+    			error = true;
+    			System.out.println("El texto no puede estar vacio");
+    		}else if(texto.length() < MIN || texto.length( ) > MAX ){
+    			error = true;
+    			System.out.println("El texto debe tener entre " + MIN +" y " + MAX +" caracteres");
+    		}
+    	}while(error);
+    	return texto;
+    }
+    
     public static int ingresarEntero(Scanner s, final int MAX, final int MIN) {
         boolean error; 
         int numero = 0;
@@ -94,6 +112,9 @@ public class Main {
             	break;
             case 5:
             	listarVideos(mainArray, videos);
+            	break;
+	    case 7:
+		buscarVideosPorCanal(s,mainArray,videos,TAMANO);
             	break;
                 
         }
@@ -228,6 +249,24 @@ public class Main {
         int indiceId = buscarVideoPorID(s, ARRAY, error, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
         mostrarVideo(ARRAY, TAMANO, indiceId); 
     }
+	
+    private static void buscarVideosPorCanal(Scanner s,final String[][] MATRIZ, final int videos, final int TAMAÑO) {
+    	System.out.println("Escribi el nombre del canal asi buscamos todos sus videos");
+    	String canalBuscado = ingresarString(s , 50 ,1);
+    	boolean verificar = true;
+        for(int i = 0; i < videos; i++) {
+			if(MATRIZ[i][2].toLowerCase().equals(canalBuscado.toLowerCase())) {
+				System.out.println("VIDEO NUMERO " + i + 1 + ":");
+				mostrarVideo(MATRIZ, TAMAÑO ,i);
+				verificar = false;
+			}	
+        }
+        if(verificar) {
+        	System.out.println("Escribiste el nombre de un canal que no existe");
+        }
+    }
+    
+
 
 	private static void mostrarVideo(final String[][] ARRAY, final int TAMANO,final int INDICE_ID) {
 		for (int i = 0; i < TAMANO; i++) {
