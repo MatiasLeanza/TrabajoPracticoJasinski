@@ -76,20 +76,66 @@ public class Main {
             case 2:	
             	if(mainArray[0][0] == null) {
             		System.err.println("Error. No se subio ningun video.");
-            		return -1;
+            		return 0;
             	} else {
-                consultarDatos(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+                consultarVideo(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
                 }
                 break;
                 
             case 3:
-            	modificarInformacion(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+            	modificarVideo(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+            	break;
+            case 4:
+            	if (videos >= 1) {
+            		eliminarVideo(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+            	} else {
+            		System.out.println("No hay ningun video subido, porfavor ingrese uno antes de borrar");
+            	}
+            	break;
+            case 5:
+            	listarVideos(mainArray, videos);
+            	break;
                 
         }
         return videos;
     }
 
-    private static int ingresarVideo(Scanner s, final String[][] ARRAY,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX,final int TAMANO, int videos) {
+	private static void listarVideos(final String[][] ARRAY, int videos) {
+		if (videos > 0) {
+	        for (int i = 0; i < videos; i++) {
+	        	System.out.println("--------------------------------");
+	            System.out.println((i + 1) + ") ");
+	            System.out.println("ID: " + ARRAY[i][0]);
+	            System.out.println("Titulo: " + ARRAY[i][1]);
+	            System.out.println("Canal: " + ARRAY[i][2]);
+	        }
+	    } else {
+	        System.out.println("No hay videos existentes como para mostrar");
+	    }
+	}
+    
+    
+    // Elimino las acciones mediante el id
+    private static int eliminarVideo(Scanner s, final String[][] ARRAY, final int TAMANO, int videos, final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
+    	boolean error = false;
+    	System.out.println("Ingrese el Id del video que desea eliminar: ");
+    	final int indiceId = buscarVideoPorID(s, ARRAY, error, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
+    	
+    	if (videos > 0) {
+    		for(int i = indiceId; i < (videos-1); i++) {
+        		ARRAY[i] = ARRAY[i+1];
+        	}
+    	} 
+    	
+    	for(int i = 0; i < ARRAY[videos-1].length; i++) {
+    		ARRAY[videos-1][i] = null;
+    	}
+    	videos--;
+    	
+		return videos;
+	}
+
+	private static int ingresarVideo(Scanner s, final String[][] ARRAY,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX,final int TAMANO, int videos) {
         String titulo, canal, pattern = "dd/MM/yyyy";
         int id, categoria, duracion, visualizaciones, valoracion, indice_id;
         SimpleDateFormat formato = new SimpleDateFormat(pattern);
@@ -142,7 +188,7 @@ public class Main {
         ARRAY[videos][2] = canal;
         ARRAY[videos][3] = String.valueOf(categoria);
         ARRAY[videos][4] = String.valueOf(duracion);
-        ARRAY[videos][5] = String.valueOf(fecha);
+        ARRAY[videos][5] = new SimpleDateFormat("dd/MM/yyyy").format(fecha);
         ARRAY[videos][6] = String.valueOf(visualizaciones);
         ARRAY[videos][7] = String.valueOf(valoracion);
 
@@ -173,27 +219,29 @@ public class Main {
         return -1;
     }
 
-    private static void consultarDatos(Scanner s, final String[][] ARRAY,final int TAMANO, final int videos,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
+    private static void consultarVideo(Scanner s, final String[][] ARRAY,final int TAMANO, final int videos,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
         boolean error = false;
         
         
         System.out.println("Ingrese id del video que quiere consultar");
         
         int indiceId = buscarVideoPorID(s, ARRAY, error, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX);
-        for (int i = 0; i < TAMANO; i++) {
-            System.out.println(ARRAY[indiceId][i]);
-        } 
+        mostrarVideo(ARRAY, TAMANO, indiceId); 
     }
 
-    private static int buscarVideoPorID(Scanner s, final String[][] ARRAY, boolean error,int videos, final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
+	private static void mostrarVideo(final String[][] ARRAY, final int TAMANO,final int INDICE_ID) {
+		for (int i = 0; i < TAMANO; i++) {
+            System.out.println(ARRAY[INDICE_ID][i]);
+        }
+	}
+
+    private static int buscarVideoPorID(Scanner s, final String[][] ARRAY, boolean error,final int VIDEOS, final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
         
-    	
-    	
     	int id, indiceId;
         do {
             
             id = ingresarEntero(s, CANT_VIDEOS_MAX, CANT_VIDEOS_MIN);
-            indiceId = buscarEntero(ARRAY, 0, id, videos);
+            indiceId = buscarEntero(ARRAY, 0, id, VIDEOS);
             if (indiceId == -1) {
                 System.out.println("Ingrese un id existente por favor");
                 error = true;
@@ -201,10 +249,11 @@ public class Main {
                 error = false;
             }
         } while (error);
+        
         return indiceId;
     }
 
-    private static int modificarInformacion (Scanner s, final String[][] ARRAY,final int TAMANO, final int videos,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) {
+    private static int modificarVideo (Scanner s, final String[][] ARRAY,final int TAMANO, final int videos,final int CANT_VIDEOS_MIN, final int CANT_VIDEOS_MAX) { // Esto si funciona
     	 boolean error = false;
     	 System.out.println("Ingrese id del video que quiere editar");
     	 
@@ -221,12 +270,64 @@ public class Main {
          System.out.println("7) Valoracion");
          System.out.println("8) Cancelar");
          
-         int eleccion = s.nextInt();
+         int eleccion = ingresarEntero(s,8,1);
          
          if (eleccion == 8) {
         	 return -1;
-         } 
+         } else {
+        	 ARRAY[indiceId][eleccion] = modificarDatos(s,ARRAY[indiceId][eleccion],eleccion);
+         }
+         
         return -1;
 	}
+
+    private static String modificarDatos(Scanner s, String string, final int OPC) {
+        if (OPC == 1 || OPC == 2) {
+        	System.out.println("Ingrese el nuevo " + (OPC == 1? "titulo" : "nombre del canal"));
+            string = s.nextLine();
+        } else {
+            switch (OPC) {
+                case 3: // Categoría
+                    System.out.println("Ingrese la nueva categoría:");
+                    String[] categorias = {
+                        "Gaming", "Musica", "Educacion", "Comedia",
+                        "Deportes", "Tecnologia", "Vlogs", "Otros"
+                    };
+                    for (int i = 0; i < categorias.length; i++) {
+                        System.out.println((i+1) + "- " + categorias[i]);
+                    }
+                    int nuevaCategoria = ingresarEntero(s, 8, 1);
+                    string = String.valueOf(nuevaCategoria);
+                case 4: // Duración
+                    System.out.println("Ingrese la nueva duración en segundos (mínimo 60)");
+                    int nuevaDuracion = ingresarEntero(s, Integer.MAX_VALUE, 60);
+                    string = String.valueOf(nuevaDuracion);
+                    break;
+
+                case 5: // Fecha
+                    System.out.println("Ingrese la nueva fecha (DD/MM/YYYY)");
+                    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                    formato.setLenient(false);
+                    Date nuevaFecha = validarFecha(s, formato);
+                    string = new SimpleDateFormat("dd/MM/yyyy").format(nuevaFecha);
+                    break;
+
+                case 6: // Visualizaciones
+                    System.out.println("Ingrese la nueva cantidad de visualizaciones:");
+                    int nuevasVisualizacion = ingresarEntero(s, Integer.MAX_VALUE, 0);
+                    string = String.valueOf(nuevasVisualizacion);
+                    break;
+
+                case 7: // Valoración
+                    System.out.println("Ingrese la nueva valoración (1 a 5):");
+                    int nuevaValoracion = ingresarEntero(s, 5, 1);
+                    string = String.valueOf(nuevaValoracion);
+                    break;
+            }
+        }
+        return string;
+    }
+    
+    
 }
 	
