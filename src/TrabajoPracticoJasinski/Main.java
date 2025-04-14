@@ -25,10 +25,12 @@ public class Main {
             opcion = mostrarMenu(s);
             videos = generarAccion(s, opcion, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos,CATEGORIAS);
         } while(opcion != 12);
+        
+        s.close();
     }
 
     public static int mostrarMenu(Scanner s) {
-        final int MAX_OPCION = 11;
+        final int MAX_OPCION = 12;
         final int MIN_OPCION = 1;
 
         System.out.println("---------------------MENU---------------------");
@@ -99,11 +101,10 @@ public class Main {
                 videos = ingresarVideo(s, mainArray, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX, TAMANO, videos,CATEGORIAS);
                 break;
             case 2:	
-            	if(mainArray[0][0] == null) {
+            	if(videos == 0) {
             		System.err.println("Error. No se subio ningun video.");
-            		return 0;
             	} else {
-                consultarVideo(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX,CATEGORIAS);
+            		consultarVideo(s, mainArray, TAMANO, videos, CANT_VIDEOS_MIN, CANT_VIDEOS_MAX,CATEGORIAS);
                 }
                 break;
                 
@@ -118,13 +119,25 @@ public class Main {
             	}
             	break;
             case 5:
+            	if(videos > 0) {
             	listarVideos(mainArray, videos);
+            	} else {
+            		System.out.println("No hay ningun video subido, porfavor ingrese uno antes");
+            	}
             	break;
             case 6:
+            	if(videos > 0) {
             	buscarVideosPorCategoria(s,mainArray,videos,TAMANO,CATEGORIAS);
+            	} else {
+            		System.out.println("No hay ningun video subido, porfavor ingrese uno antes");
+            	}
             	break;
             case 7:
+            	if(videos > 0) {
             	buscarVideosPorCanal(s,mainArray,videos,TAMANO,CATEGORIAS);
+            	} else {
+            		System.out.println("No hay ningun video subido, porfavor ingrese uno antes");
+            	}
             	break;
             case 8:
             	if(videos > 0) {
@@ -167,6 +180,9 @@ public class Main {
             		}
             	} while(error);
             	
+            	break;
+            case 12:
+            	System.out.println("Hasta la proxima.");
             	break;
                 
         }
