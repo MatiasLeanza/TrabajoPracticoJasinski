@@ -153,6 +153,15 @@ public class Main {
             		System.out.println("No hay ningun video subido, porfavor ingrese uno antes");
             	}
             	break;
+            case 10:
+            	if(videos > 0) {
+            		calcularEstadisticas(s,mainArray,videos,TAMANO,CATEGORIAS);
+            	} else {
+            		System.out.println("No hay ningun video subido, porfavor ingrese uno antes");
+            	}
+            	calcularEstadisticas(s,mainArray,videos,TAMANO,CATEGORIAS);
+            	
+            	break;
             case 11:
             	System.out.println("Quieres iniciar el modo prueba?(s/n)");
             	boolean error = false;
@@ -510,6 +519,118 @@ public class Main {
     	return videos;
     }
     
+    private static void calcularEstadisticas(Scanner s, final String[][] ARRAY, final int VIDEOS, final int TAMANO, final String[] CATEGORIAS) {
+    	System.out.println("Aqui tiene los datos solicitados:");
+    	
+    	calcularPorcentajePorCategoria( ARRAY ,VIDEOS);
+    	calcularPromedioTiempo(ARRAY ,VIDEOS);
+    	
+    }
     
-}
+    private static void calcularPorcentajePorCategoria( final String[][] ARRAY ,final int VIDEOS) {
+    	double gaming = 0.0;
+    	double musica = 0.0;
+    	double educacion = 0.0;
+    	double comedia = 0.0;
+    	double deportes =  0.0;
+    	double tecnologia = 0.0;
+    	double vlog = 0.0;
+    	double otros = 0.0;
+    	
+    	
+    	for(int i = 0; i < VIDEOS; i++) {
+    	
+    		switch(ARRAY[i][3]) {
+    		
+    		case "1":
+    			
+    			gaming++;
+    		
+    		break;
+    		
+    		case "2":
+    			
+    			musica++;
+    		
+    		break;
+    
+    		case "3":
 	
+    			educacion++;
+
+    			break;
+
+    		case "4":
+	
+    			comedia++;
+
+    			break;
+
+    		case "5":
+	
+    			deportes++;
+
+    			break;
+
+    		case "6":
+	
+    			tecnologia++;
+
+    			break;
+
+    		case "7":
+	
+    			vlog++;
+
+    			break;
+
+    		case "8":
+	
+    			otros++;
+
+    		break;
+    		}
+    				
+    	}
+    	
+    	gaming = (gaming * 100) / VIDEOS;
+    	musica = (musica * 100) / VIDEOS;
+    	educacion = (educacion * 100) / VIDEOS;
+    	comedia = (comedia * 100) / VIDEOS;
+    	deportes = (deportes * 100) / VIDEOS;
+    	tecnologia = (tecnologia * 100) / VIDEOS;
+    	vlog = (vlog * 100) / VIDEOS;
+    	otros = (otros * 100) / VIDEOS;
+    	
+    	System.out.println("El porcentaje del las categorias son: ");
+    	System.out.println("gaming: " + gaming + "%");
+    	System.out.println("musica: " + musica + "%");
+    	System.out.println("educacion: " + educacion + "%");
+    	System.out.println("comedia: " + comedia + "%");
+    	System.out.println("deportes: " + deportes + "%");
+    	System.out.println("tecnologia: " + tecnologia + "%");
+    	System.out.println("vlog: " + vlog + "%");
+    	System.out.println("otros: " + otros + "%");
+    	
+    	System.out.println("-----------------------------------------------");
+    }
+    
+    private static void calcularPromedioTiempo(final String[][] ARRAY ,final int VIDEOS) {
+    
+    	int segundosTotales = 0;
+    	
+    	for(int i = 0; i < VIDEOS; i++) {
+    		segundosTotales = segundosTotales + Integer.parseInt(ARRAY[i][4]);
+    	}
+    	
+    	int promedio = segundosTotales / VIDEOS;
+    	int minutos = promedio / 60;
+    	int segundosRestantes = promedio % 60;
+    	
+    	System.out.println("El promedio del tiempo de videos es: ");
+    	System.out.println(minutos + " Minutos " + segundosRestantes + " Segundos ( " + promedio + " Segundos )" );
+    	
+    	System.out.println("-----------------------------------------------");
+    	
+    }
+}	
