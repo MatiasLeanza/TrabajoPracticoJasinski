@@ -159,7 +159,7 @@ public class Main {
             	} else {
             		System.out.println("No hay ningun video subido, porfavor ingrese uno antes");
             	}
-            	calcularEstadisticas(s,mainArray,videos,TAMANO,CATEGORIAS);
+            	
             	
             	break;
             case 11:
