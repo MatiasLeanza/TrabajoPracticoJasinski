@@ -159,8 +159,6 @@ public class Main {
             	} else {
             		System.out.println("No hay ningun video subido, porfavor ingrese uno antes");
             	}
-            	
-            	
             	break;
             case 11:
             	System.out.println("Quieres iniciar el modo prueba?(s/n)");
@@ -524,6 +522,9 @@ public class Main {
     	
     	calcularPorcentajePorCategoria( ARRAY ,VIDEOS);
     	calcularPromedioTiempo(ARRAY ,VIDEOS);
+    	//mostrarCanalMasVideos();
+    	calcularVisualizacionesPromedio(ARRAY ,VIDEOS);
+    	calcularPromedioValoracion(ARRAY ,VIDEOS);
     	
     }
     
@@ -632,5 +633,32 @@ public class Main {
     	
     	System.out.println("-----------------------------------------------");
     	
+    }
+    private static void calcularVisualizacionesPromedio(final String[][] ARRAY ,final int VIDEOS) {
+    	int visualizacionesTotales = 0;
+    	
+    	for(int i = 0; i < VIDEOS; i++) {
+    		visualizacionesTotales = visualizacionesTotales + Integer.parseInt(ARRAY[i][6]);
+    	}
+    	
+    	double promedio = visualizacionesTotales / VIDEOS;
+    	
+    	System.out.println( "Visualizaciones totales: " + visualizacionesTotales);
+    	System.out.println("Promedio de visualizaciones: " + promedio);
+    	
+    	System.out.println("-----------------------------------------------");
+    }
+    
+    private static void calcularPromedioValoracion(final String[][] ARRAY ,final int VIDEOS) {
+    	int sumaValoraciones = 0;
+    	
+    	for(int i = 0; i < VIDEOS; i++) {
+    		sumaValoraciones = sumaValoraciones + Integer.parseInt(ARRAY[i][7]);
+    	}
+    	
+    	double promedio = sumaValoraciones / VIDEOS;
+    	System.out.println("Promedio de valoracion: " + promedio);
+    	
+    	System.out.println("-----------------------------------------------");
     }
 }	
